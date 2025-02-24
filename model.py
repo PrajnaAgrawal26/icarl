@@ -8,7 +8,7 @@ from PIL import Image
 from resnet import resnet18
 
 # Hyper Parameters
-num_epochs = 50
+num_epochs = 5
 batch_size = 100
 learning_rate = 0.002
 
