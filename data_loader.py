@@ -18,34 +18,20 @@ class iCIFAR10(CIFAR10):
 
         # Select subset of classes
         if self.train:
-            train_data = []
-            train_labels = []
-
-            for i in range(len(self.train_data)):
-                if self.train_labels[i] in classes:
-                    train_data.append(self.train_data[i])
-                    train_labels.append(self.train_labels[i])
-
-            self.train_data = np.array(train_data)
-            self.train_labels = train_labels
+            mask = np.isin(self.targets, classes)
+            self.data = self.data[mask]
+            self.targets = np.array(self.targets)[mask]
 
         else:
-            test_data = []
-            test_labels = []
-
-            for i in range(len(self.test_data)):
-                if self.test_labels[i] in classes:
-                    test_data.append(self.test_data[i])
-                    test_labels.append(self.test_labels[i])
-
-            self.test_data = np.array(test_data)
-            self.test_labels = test_labels
+            mask = np.isin(self.targets, classes)
+            self.data = self.data[mask]
+            self.targets = np.array(self.targets)[mask]
 
     def __getitem__(self, index):
         if self.train:
-            img, target = self.train_data[index], self.train_labels[index]
+            img, target = self.data[index], self.targets[index]
         else:
-            img, target = self.test_data[index], self.test_labels[index]
+            img, target = self.data[index], self.targets[index]
 
         img = Image.fromarray(img)
 
@@ -59,12 +45,12 @@ class iCIFAR10(CIFAR10):
 
     def __len__(self):
         if self.train:
-            return len(self.train_data)
+            return len(self.data)
         else:
-            return len(self.test_data)
+            return len(self.data)
 
     def get_image_class(self, label):
-        return self.train_data[np.array(self.train_labels) == label]
+        return self.data[np.array(self.targets) == label]
 
     def append(self, images, labels):
         """Append dataset with images and labels
@@ -73,9 +59,8 @@ class iCIFAR10(CIFAR10):
             images: Tensor of shape (N, C, H, W)
             labels: list of labels
         """
-
-        self.train_data = np.concatenate((self.train_data, images), axis=0)
-        self.train_labels = self.train_labels + labels
+        self.data = np.concatenate((self.data, images), axis=0)
+        self.targets = list(self.targets) + labels
 
 class iCIFAR100(iCIFAR10):
     base_folder = 'cifar-100-python'
