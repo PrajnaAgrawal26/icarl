@@ -165,7 +165,7 @@ class iCaRLNet(nn.Module):
         self.compute_means = True
 
         # Increment number of weights in final fc layer
-        classes = list(set(dataset.train_labels))
+        classes = list(set(dataset.targets))
         new_classes = [cls for cls in classes if cls > self.n_classes - 1]
         self.increment_classes(len(new_classes))
         self.cuda()
