@@ -75,7 +75,7 @@ for s in range(0, total_classes, num_classes):
 
     # Update representation via BackProp
     icarl.update_representation(train_set)
-    m = K / icarl.n_classes
+    m = int(K / icarl.n_classes)
 
     # Reduce exemplar sets for known classes
     icarl.reduce_exemplar_sets(m)
